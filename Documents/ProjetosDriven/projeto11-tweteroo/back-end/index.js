@@ -23,7 +23,13 @@ app.post("/sign-up", (req, res) => {
 });
 
 app.post("/tweets", (req, res) => {
-  const { username, avatar } = req.body;
+  const { username, tweet } = req.body;
+
+  tweets.push({
+    username: username,
+    tweet: tweet,
+  });
+
   res.send("OK");
 });
 
@@ -33,15 +39,28 @@ app.get("/tweets", (req, res) => {
 
 function reverseTweets() {
   const Tweets = [...tweets].reverse();
-  if (tweets.length >= 0 && tweets.length <= 10) return Tweets;
+  let Avatar = "";
+  let loop = 10;
+  
+  if (tweets.length >= 0 && tweets.length <= 10) {
+    loop = tweets.length;
+  }
 
   const newArrayTweets = [];
-  let cond = 0;
-  while (cond < 10) {
-    newArrayTweets.push(Tweets[cond]);
-    cond++;
+  let cont = 0;
+  while (cont < loop) {
+    for (let i = 0; i < Users.length; i++) {
+      if (Tweets[cont].username === Users[i].username) {
+        Avatar = Users[i].avatar;
+        Tweets[cont].avatar = Avatar;
+      }
+    }
+
+    newArrayTweets.push(Tweets[cont]);
+    cont++;
+    Avatar = "";
   }
-  return newTweets;
+  return newArrayTweets;
 }
 
 app.listen(5000);
